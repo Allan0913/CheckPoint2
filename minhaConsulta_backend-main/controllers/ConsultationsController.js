@@ -1,10 +1,26 @@
 const db = require('../db/database');
 
-// Obter todas as consultas
+// Obter todas as consultas com controle de acesso
 const getAllConsultations = (req, res) => {
-  const sql = `SELECT consultations.*, users.username FROM consultations 
-               JOIN users ON consultations.userId = users.id`;
-  db.all(sql, [], (err, rows) => {
+  const userId = req.user.id; // Id do usuário logado
+  const role = req.user.role; // Role do usuário logado ('admin' ou 'user')
+
+  let sql;
+  const params = [];
+
+  // Se for admin, pode visualizar todas as consultas
+  if (role === 'admin') {
+    sql = `SELECT consultations.*, users.username FROM consultations 
+           JOIN users ON consultations.userId = users.id`;
+  } else {
+    // Se for user, pode visualizar apenas as suas próprias consultas
+    sql = `SELECT consultations.*, users.username FROM consultations 
+           JOIN users ON consultations.userId = users.id 
+           WHERE consultations.userId = ?`;
+    params.push(userId);
+  }
+
+  db.all(sql, params, (err, rows) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }

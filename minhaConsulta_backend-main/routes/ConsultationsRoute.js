@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllConsultations, createConsultation, updateConsultation } = require('../controllers/consultationsController');
+const { getAllConsultations, createConsultation, updateConsultation } = require('../controllers/ConsultationsController');
 
 
 router.get('/consultations', getAllConsultations);

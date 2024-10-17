@@ -24,6 +24,7 @@ const ConsultationsListScreen = () => {
         console.error('Erro ao buscar consultas:', error);
       });
   }, []);
+  
 
   const renderItem = ({ item }: { item: Consultation }) => (
     <View style={styles.consultationItem}>
